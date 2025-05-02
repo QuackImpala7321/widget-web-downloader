@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="js-widget-title" content="File Downloader">
+	<title>File Downloader</title>
+</head>
+<body>
+	<script type="text/javascript">
+		function pushLog(msg) {
+			return window.__wweb2Log ? window.__wweb2Log(msg) : console.log(msg)
+		}
+		
+		function  __wweb2WaitMillisecondsToWidgetIsReady(currentDelayMs) {
+			return  0;
+		}
+
+		function downloadFile() {
+			const el = document.getElementById("input")
+			const text = el.innerText
+			pushLog(text)
+		}
+		
+		let query = window.location.hash
+		if (query.startsWith('#')) {
+			query = query.substring(1)
+		}
+		const params = new URLSearchParams(query)
+		const action = params.get("action")
+		if (action) {
+			switch (action) {
+				case "download": {
+					downloadFile()
+				}
+			}
+
+			params.delete("action")
+		}
+	</script>
+	<p id="input">Har har</p>
+	<a href="#action=download" onclick="event.preventDefault(); downloadFile()">Download</a>
+</body>
+</html>
