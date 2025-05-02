@@ -5,6 +5,76 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="js-widget-title" content="File Downloader">
 	<title>File Downloader</title>
+	<style>
+		:root {
+			--round: 12px;
+			--lighter: rgb(82, 82, 82);
+			--light: rgb(53, 53, 53);
+		}
+		
+		* {
+			/* display: block; */
+			margin: 0;
+			padding: 0;
+
+			color: white;
+			font-size: 20px;
+		}
+
+		h1 {
+			font-size: 30px;
+		}
+
+		input {
+			padding: 20px;
+
+			background-color: var(--light)
+		}
+		
+		body {
+			margin: 20px;
+
+			justify-items: center;
+			
+			background-color: rgb(43, 43, 43);
+		}
+
+		.ignore-background {
+			display: contents;
+			justify-items: left;
+			text-align: left;
+
+			width: 100%;
+			height: 100%;
+		}
+
+		.body-wrapper {
+			display: flex;
+			flex-direction: column;
+			align-content: center;
+			justify-content: center;
+		}
+
+		.download-input-wrapper {
+			margin: 20px;
+		}
+
+		.download-input-wrapper > * ~ * {
+			margin-left: 10px;
+		}
+
+		.a-button {
+			padding: 20px;
+
+			background-color: var(--lighter);
+			border-radius: var(--round);
+			text-decoration: none;
+		}
+
+		.url-input {
+			border-radius: var(--round);
+		}
+	</style>
 </head>
 <body>
 	<script type="text/javascript">
@@ -16,10 +86,15 @@
 			return  0;
 		}
 
-		function downloadFile() {
-			const el = document.getElementById("input")
-			const text = el.innerText
-			pushLog(text)
+		async function downloadFile() {
+			/** @type {Response} */
+			let res
+			try {
+				/** @type {HTMLInputElement} */
+				const el = document.getElementById("url-input")
+				res = await fetch(el.value)
+			} catch (err) { pushLog("Failed to fetch."); return; }
+			pushLog(res)
 		}
 		
 		let query = window.location.hash
@@ -32,13 +107,25 @@
 			switch (action) {
 				case "download": {
 					downloadFile()
+					break
+				}
+				default: {
+					pushLog("ignored")
+					break
 				}
 			}
 
 			params.delete("action")
 		}
 	</script>
-	<p id="input">Har har</p>
-	<a href="#action=download" onclick="event.preventDefault(); downloadFile()">Download</a>
+	<button class="ignore-background">
+		<div class="body-wrapper">
+			<h1>Download file with URL</h1>
+			<div class="download-input-wrapper">
+				<a class="a-button" href="#action=download" onclick="event.preventDefault(); downloadFile()">Download</a>
+				<input class="url-input" id="url-input" type="text">
+			</div>
+		</div>
+	</button>
 </body>
 </html>
